@@ -10,6 +10,7 @@
       set_fact:
         container_name: "{{  container.name|default(defaults.name)  }}"
       failed_when: "not 'name' in container"
+      no_log: yes
 
     - name: "Resolve {{ container_name }}'s mounts"
       block:
