@@ -27,16 +27,12 @@
     - name: Collect container key-value pairs
       set_fact:
         container_info_keys: "{{ container_info_keys|default([])+[  ((item|basename|splitext)[0]).split('__')[1]  ] }}"
-        container_info_values: "{{ container_info_values|default([])+[  lookup('vars',  ((item|basename|splitext)[0]).split('__')[1]  )  ] }}"
+        container_info_values: "{{ container_info_values|default([])+[  lookup('vars',((item|basename|splitext)[0]).split('__')[1],default={})  ] }}"
       with_fileglob: '{{ defs_files }}'
 
     - name: Create container_infos
       set_fact:
-        container_infos: "{{  dict(container_info_keys | zip(container_info_values))  }}"
+        container_infos: "{{  container_infos|default({})|combine(dict(container_info_keys | zip(container_info_values)))  }}"
+      notify: Deploy containers provided in definition files
 
-    - include_tasks: "{{ container_template }}"
-      loop: "{{  container_infos|dict2items(value_name='container')  }}"
-      loop_control:
-        loop_var: container_info
-        index_var: loop_index
   when: container_defs_dir|length!=0
