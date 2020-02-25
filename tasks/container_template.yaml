@@ -1,79 +1,79 @@
-- name: "Initialize {{container_info.key}} params"
+- name: "Initialize {{  container_info.key  }} params"
   set_fact:
-    container: "{{container_info.container}}"
+    container: "{{  container_info.container  }}"
     container_mounts: []
     service_mounts: []
     absolute_service_mounts: []
 
 - block:
-    - name: "Resolve {{container_info.key}}'s name"
+    - name: "Resolve {{ container_info.key }}'s name"
       set_fact:
-        container_name: "{{ container.name|default(defaults.name) }}"
+        container_name: "{{  container.name|default(defaults.name)  }}"
       failed_when: "not 'name' in container"
 
-    - name: "Resolve {{container_name}}'s mounts"
+    - name: "Resolve {{ container_name }}'s mounts"
       block:
-        - name: "Resolve {{container_name}}'s plain mounts"
+        - name: "Resolve {{ container_name }}'s plain mounts"
           set_fact:
-            container_mounts: "{{container_mounts+[  default_mount_opts|default({})|combine(item,recursive=true)  ]}}"
-          loop: "{{ container.mounts|default(defaults.mounts|default([])) }}"
+            container_mounts: "{{ container_mounts+[  default_mount_opts|default({})|combine(item,recursive=true)  ] }}"
+          loop: "{{  container.mounts|default(defaults.mounts|default([]))  }}"
           when: "'source' in item"
 
-        - name: "Collect {{container_name}}'s service mounts info"
+        - name: "Collect {{ container_name }}'s service mounts info"
           set_fact:
-            service_mounts: "{{service_mounts+[  default_mount_opts|default({})|combine(item,recursive=true)  ]}}"
-          loop: "{{ container.service_mounts|default(defaults.mounts|default([])) }}"
+            service_mounts: "{{ service_mounts+[  default_mount_opts|default({})|combine(item,recursive=true)  ] }}"
+          loop: "{{  container.service_mounts|default(defaults.mounts|default([]))  }}"
           when: "'source' in item"
 
-        - name: "Resolve {{container_name}}'s service mounts"
+        - name: "Resolve {{ container_name }}'s service mounts"
           set_fact:
-            absolute_service_mounts: "{{absolute_service_mounts+[  item|combine({'source': [volumes_dir,item.source]|join('/')})  ]}}"
-          loop: "{{ service_mounts }}"
+            absolute_service_mounts: "{{ absolute_service_mounts+[  item|combine({'source': [volumes_dir,item.source]|join('/')})  ] }}"
+          loop: "{{  service_mounts  }}"
           when: "'source' in item"
 
         - name: "Collect all mounts"
           set_fact:
-            all_mounts: "{{container_mounts+absolute_service_mounts}}"
+            all_mounts: "{{ container_mounts+absolute_service_mounts }}"
 
-        - name: "Create mount directory of '{{ container_name }}' container"
+        - name: "Create mount directory of '{{  container_name  }}' container"
           file:
-            path: "{{item.source}}"
+            path: "{{ item.source }}"
             state: 'directory'
             mode: '0777'
             recurse: yes
-          #            group: "{{ansible_user}}"
-          #            owner: "{{ansible_user}}"
-          loop: "{{ all_mounts }}"
+          #            group: "{{ ansible_user }}"
+          #            owner: "{{ ansible_user }}"
+          loop: "{{  all_mounts  }}"
           when: "'source' in item"
 
-    - name: "Deploy {{ container_name }}"
+    - name: "Deploy {{  container_name  }}"
       docker_container:
-        name: "{{ container_name }}"
-        image: "{{ container.image|default(defaults.image|default(container_name)) }}"
-        hostname: "{{ container.hostname|default(defaults.hostname|default(container_name)) }}"
+        name: "{{  container_name  }}"
+        image: "{{  container.image|default(defaults.image|default(container_name))  }}"
+        hostname: "{{  container.hostname|default(defaults.hostname|default(container_name))  }}"
 
-        command: "{{ container.command|default(defaults.command|default(omit)) }}"
-        env: "{{ defaults.env|default({})|combine(container.env|default({}), recursive=True) }}"
+        command: "{{  container.command|default(defaults.command|default(omit))  }}"
+        env: "{{  defaults.env|default({})|combine(container.env|default({}), recursive=True)  }}"
 
-        ports: "{{ container.ports|default(defaults.ports|default(omit)) }}"
-        expose: "{{ container.expose|default(defaults.expose|default(omit)) }}"
-        networks: "{{ container.networks|default(defaults.networks|default(omit)) }}"
+        ports: "{{  container.ports|default(defaults.ports|default(omit))  }}"
+        expose: "{{  container.expose|default(defaults.expose|default(omit))  }}"
+        networks: "{{  container.networks|default(defaults.networks|default(omit))  }}"
 
-        volumes: "{{ container.volumes|default(defaults.volumes|default(omit)) }}"
-        mounts: "{{ all_mounts }}"
+        volumes: "{{  container.volumes|default(defaults.volumes|default(omit))  }}"
+        mounts: "{{  all_mounts  }}"
 
-        user: "{{ container.user|default(defaults.user|default(omit)) }}"
-        runtime: "{{ container.runtime|default(defaults.runtime|default(omit)) }}"
+        user: "{{  container.user|default(defaults.user|default(omit))  }}"
+        runtime: "{{  container.runtime|default(defaults.runtime|default(omit))  }}"
 
-        networks_cli_compatible: "{{ container.networks_cli_compatible|default(defaults.networks_cli_compatible|default(omit)) }}"
-        sysctls: "{{ container.sysctls|default(defaults.sysctls|default(omit)) }}"
-        comparisons: "{{ container.comparisons|default(defaults.comparisons|default(omit)) }}"
+        networks_cli_compatible: "{{  container.networks_cli_compatible|default(defaults.networks_cli_compatible|default(omit))  }}"
+        sysctls: "{{  container.sysctls|default(defaults.sysctls|default(omit))  }}"
+        comparisons: "{{  container.comparisons|default(defaults.comparisons|default(omit))  }}"
 
 
 
   rescue:
     - debug:
-        msg: "Deployment of '{{container_info.key}}' container failed. Skipping."
+        msg: "Deployment of '{{ container_info.key }}' container failed. Skipping."
     - meta: clear_host_errors
 #    - meta: end_play
 
