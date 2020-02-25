@@ -33,9 +33,7 @@
     - name: Create container_infos
       set_fact:
         container_infos: "{{  dict(container_info_keys | zip(container_info_values))  }}"
-    - name: test
-      debug:
-        msg: "{{ container_template }}"
+
     - include_tasks: "{{ container_template }}"
       loop: "{{  container_infos|dict2items(value_name='container')  }}"
       loop_control:
