@@ -1,2 +1,9 @@
 ---
 # handlers file for lgblkb-deployer
+
+- name: Deploy containers provided in definition files
+  include_tasks: "{{ container_template }}"
+  loop: "{{  container_infos|dict2items(value_name='container')  }}"
+  loop_control:
+    loop_var: container_info
+    index_var: loop_index
