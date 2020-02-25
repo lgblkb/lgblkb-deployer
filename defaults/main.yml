@@ -1,0 +1,6 @@
+---
+# defaults file for lgblkb-deployer
+container_defs_dir:
+docker_data_dir:
+volumes_dir: "{{[docker_data_dir,'volumes']|join('/')}}"
+container_template: "container_template.yaml"
