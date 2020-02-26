@@ -5,12 +5,20 @@
     service_mounts: []
     absolute_service_mounts: []
 
+- name: Show default params
+  debug:
+    var: container_info
+
+- name: Show container params
+  debug:
+    var: defaults
+
 - block:
     - name: "Resolve {{ container_info.key }}'s name"
       set_fact:
         container_name: "{{  container.name|default(defaults.name)  }}"
       failed_when: "not 'name' in container"
-#      no_log: yes
+    #      no_log: yes
 
     - name: "Resolve {{ container_name }}'s mounts"
       block:
@@ -77,7 +85,3 @@
         msg: "Deployment of '{{ container_info.key }}' container failed. Skipping."
     - meta: clear_host_errors
 #    - meta: end_play
-
-
-
-
