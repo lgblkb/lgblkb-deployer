@@ -10,7 +10,7 @@
       set_fact:
         container_name: "{{  container.name|default(defaults.name)  }}"
       failed_when: "not 'name' in container"
-      no_log: yes
+#      no_log: yes
 
     - name: "Resolve {{ container_name }}'s mounts"
       block:
@@ -23,7 +23,7 @@
         - name: "Collect {{ container_name }}'s service mounts info"
           set_fact:
             service_mounts: "{{ service_mounts+[  default_mount_opts|default({})|combine(item,recursive=true)  ] }}"
-          loop: "{{  container.service_mounts|default(defaults.mounts|default([]))  }}"
+          loop: "{{  container.service_mounts|default(defaults.service_mounts|default([]))  }}"
           when: "'source' in item"
 
         - name: "Resolve {{ container_name }}'s service mounts"
