@@ -7,11 +7,11 @@
 
 - name: Show default params
   debug:
-    var: container_info
+    var: defaults
 
 - name: Show container params
   debug:
-    var: defaults
+    var: container
 
 - block:
     - name: "Resolve {{ container_info.key }}'s name"
