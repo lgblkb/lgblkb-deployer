@@ -77,6 +77,7 @@
         networks_cli_compatible: "{{  container.networks_cli_compatible|default(defaults.networks_cli_compatible|default(omit))  }}"
         sysctls: "{{  container.sysctls|default(defaults.sysctls|default(omit))  }}"
         comparisons: "{{  container.comparisons|default(defaults.comparisons|default(omit))  }}"
+        restart: "{{  container.restart|default(defaults.restart|default(omit))  }}"
 
 
 
