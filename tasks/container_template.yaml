@@ -79,6 +79,7 @@
         comparisons: "{{  container.comparisons|default(defaults.comparisons|default(omit))  }}"
         restart: "{{  container.restart|default(defaults.restart|default(omit))  }}"
         state: "{{  container.state|default(defaults.state|default(omit))  }}"
+        recreate: "{{  container.recreate|default(defaults.recreate|default(omit))  }}"
 
 
 
