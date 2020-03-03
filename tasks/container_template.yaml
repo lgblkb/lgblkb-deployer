@@ -78,6 +78,7 @@
         sysctls: "{{  container.sysctls|default(defaults.sysctls|default(omit))  }}"
         comparisons: "{{  container.comparisons|default(defaults.comparisons|default(omit))  }}"
         restart: "{{  container.restart|default(defaults.restart|default(omit))  }}"
+        state: "{{  container.state|default(defaults.state|default(omit))  }}"
 
 
 
